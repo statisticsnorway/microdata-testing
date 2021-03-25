@@ -1,0 +1,1 @@
+from .fastparquet_test import run_test
