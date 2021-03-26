@@ -1,6 +1,7 @@
 import os
 from datetime import date
 
+import numpy as np
 import fastparquet_test
 import pyarrow_test
 from storage_formats.apache_parquet.python.timer import timeblock
@@ -22,11 +23,12 @@ with timeblock('pyarrow run_test()'):
     )
 
 with timeblock('fastparquet run_test()'):
-    # start_date.
+    start_as_datetime64 = np.datetime64('2005-02-25')
+    stop_as_datetime64 = np.datetime64('2015-02-25')
     fastparquet_test.run_test(
         input_file=data_dir + input_file,
         output_dir=data_dir,
-        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)]
+        filters=[('start', '>=', start_as_datetime64), ('stop', '<=', stop_as_datetime64)]
     )
 
 # TODO test nulls
