@@ -19,7 +19,8 @@ with timeblock('pyarrow run_test()'):
     pyarrow_test.run_test(
         input_file=data_dir + input_file,
         output_dir=data_dir,
-        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)]
+        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)],
+        use_pandas=True
     )
 
 with timeblock('fastparquet run_test()'):
