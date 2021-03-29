@@ -32,5 +32,11 @@ with timeblock('fastparquet run_test()'):
         filters=[('start', '>=', start_as_datetime64), ('stop', '<=', stop_as_datetime64)]
     )
 
+pyarrow_test.run_partition_test(
+    input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+    output_dir=data_dir,
+    filters=None
+)
+
 # TODO test nulls
 # fastparquet: https://fastparquet.readthedocs.io/en/latest/details.html#nulls

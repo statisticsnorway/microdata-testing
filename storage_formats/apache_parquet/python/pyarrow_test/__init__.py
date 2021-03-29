@@ -1,1 +1,1 @@
-from .pyarrow_test import run_test
+from .pyarrow_test import *
