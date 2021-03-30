@@ -5,7 +5,7 @@ from fastparquet import ParquetFile
 from fastparquet import write
 from fastparquet.parquet_thrift.parquet.ttypes import RowGroup
 
-from storage_formats.apache_parquet.python.timer import timeblock
+from timer import timeblock
 
 
 def run_test(input_file: str, output_dir: str, filters: list):

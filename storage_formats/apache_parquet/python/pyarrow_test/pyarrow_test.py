@@ -5,8 +5,9 @@ from time import time
 from typing import Optional
 
 import pyarrow.parquet as pq
+from pandas import DataFrame
 
-from storage_formats.apache_parquet.python.timer import timeblock
+from timer import timeblock
 
 
 def run_test(input_file: str, output_dir: str, filters: list, use_pandas: bool):
@@ -79,4 +80,23 @@ def run_partition_test(input_file: str, output_dir: str, filters: Optional[list]
     table = pq.read_table(root_path,
                           filters=[('start_year', '>=', start_year), ('value', '>', value)])
                           # filters=[('start_year', '>=', start_year)])
+    print(table.to_pandas())
+
+
+def run_id_filter_test(input_file: str, input_id_file: str):
+
+    # converting ids to pandas will be a "zero copy conversion" as unit_id column is int64 when:
+    # - ids are not nulls
+    # - a single ChunkedArray
+    # TODO check it that is the case
+    # https://arrow.apache.org/docs/python/pandas.html#zero-copy-series-conversions
+    filter_ids = pq.read_table(source=input_id_file)
+    filter_ids_as_pandas: DataFrame = filter_ids.to_pandas()
+    filter_ids_as_list = filter_ids_as_pandas['unit_id'].tolist()
+
+    print('Parquet metadata: ' + str(pq.read_metadata(input_id_file)))
+    print('Parquet schema: ' + pq.read_schema(input_id_file).to_string())
+    print('Using filter ids: ' + str(filter_ids.to_pandas()))
+
+    table = pq.read_table(source=input_file, filters=[('unit_id', 'in', filter_ids_as_list)])
     print(table.to_pandas())

@@ -4,7 +4,15 @@ from datetime import date
 import numpy as np
 import fastparquet_test
 import pyarrow_test
-from storage_formats.apache_parquet.python.timer import timeblock
+from timer import timeblock
+
+
+# Get a list of all importable modules from a given path
+# https://chrisyeh96.github.io/2017/08/08/definitive-guide-python-imports.html
+import pkgutil
+search_path = ['.']  # set to None to see all modules importable from sys.path
+all_modules = [x[1] for x in pkgutil.iter_modules(path=search_path)]
+print(all_modules)
 
 data_dir = '../data/'
 input_file = 'DATA_50_MILLION_ROWS__1_0.parquet'
@@ -32,11 +40,19 @@ with timeblock('fastparquet run_test()'):
         filters=[('start', '>=', start_as_datetime64), ('stop', '<=', stop_as_datetime64)]
     )
 
-pyarrow_test.run_partition_test(
-    input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-    output_dir=data_dir,
-    filters=None
-)
+with timeblock('pyarrow_test run_partition_test()'):
+    pyarrow_test.run_partition_test(
+        input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+        output_dir=data_dir,
+        filters=None
+    )
+
+with timeblock('pyarrow run_id_filter_test()'):
+    pyarrow_test.run_id_filter_test(
+        input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+        input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
+    )
+
 
 # TODO test nulls
 # fastparquet: https://fastparquet.readthedocs.io/en/latest/details.html#nulls
