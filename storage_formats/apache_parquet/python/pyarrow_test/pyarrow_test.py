@@ -5,6 +5,7 @@ from time import time
 from typing import Optional
 
 import pyarrow.parquet as pq
+from memory_profiler import profile
 from pandas import DataFrame
 
 from timer import timeblock
@@ -82,7 +83,7 @@ def run_partition_test(input_file: str, output_dir: str, filters: Optional[list]
                           # filters=[('start_year', '>=', start_year)])
     print(table.to_pandas())
 
-
+@profile
 def run_id_filter_test(input_file: str, input_id_file: str):
 
     # converting ids to pandas will be a "zero copy conversion" as unit_id column is int64 when:
