@@ -4,6 +4,7 @@ from datetime import date
 from time import time
 from typing import Optional
 
+import pandas
 import pyarrow.parquet as pq
 from memory_profiler import profile
 from pandas import DataFrame
@@ -101,3 +102,20 @@ def run_id_filter_test(input_file: str, input_id_file: str):
 
     table = pq.read_table(source=input_file, filters=[('unit_id', 'in', filter_ids_as_list)])
     print(table.to_pandas())
+
+
+@profile
+def run_id_filter_test_dataframe_join(input_file: str, input_id_file: str):
+
+    # https://pandas.pydata.org/docs/user_guide/merging.html#database-style-dataframe-or-named-series-joining-merging
+    filter_ids = pq.read_table(source=input_id_file)
+    filter_ids_as_pandas: DataFrame = filter_ids.to_pandas()
+
+    # print('Parquet metadata: ' + str(pq.read_metadata(input_id_file)))
+    # print('Parquet schema: ' + pq.read_schema(input_id_file).to_string())
+    # print('Using filter ids: ' + str(filter_ids.to_pandas()))
+
+    data_as_pandas: DataFrame = pq.read_table(source=input_file).to_pandas()
+
+    merged: DataFrame = pandas.merge(data_as_pandas, filter_ids_as_pandas, on='unit_id', sort=False)
+    print(merged)

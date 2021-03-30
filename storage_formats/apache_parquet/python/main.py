@@ -53,6 +53,12 @@ with timeblock('pyarrow run_id_filter_test()'):
         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
     )
 
+with timeblock('pyarrow run_id_filter_test_dataframe_join()'):
+    pyarrow_test.run_id_filter_test_dataframe_join(
+        input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+        input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
+    )
+
 
 # TODO test nulls
 # fastparquet: https://fastparquet.readthedocs.io/en/latest/details.html#nulls
