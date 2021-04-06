@@ -94,13 +94,17 @@ def run_id_filter_test(input_file: str, input_id_file: str):
     # https://arrow.apache.org/docs/python/pandas.html#zero-copy-series-conversions
     filter_ids = pq.read_table(source=input_id_file)
     filter_ids_as_pandas: DataFrame = filter_ids.to_pandas()
-    filter_ids_as_list = filter_ids_as_pandas['unit_id'].tolist()
+    # filter_ids_as_list = filter_ids_as_pandas['unit_id'].tolist()
+    filter_ids_as_set = set(filter_ids_as_pandas['unit_id'])
 
     print('Parquet metadata: ' + str(pq.read_metadata(input_id_file)))
     print('Parquet schema: ' + pq.read_schema(input_id_file).to_string())
     print('Using filter ids: ' + str(filter_ids.to_pandas()))
 
-    table = pq.read_table(source=input_file, filters=[('unit_id', 'in', filter_ids_as_list)])
+    table = pq.read_table(source=input_file, filters=[
+        # ('unit_id', 'in', filter_ids_as_list)
+        ('unit_id', 'in', filter_ids_as_set)
+    ])
     print(table.to_pandas())
 
 
