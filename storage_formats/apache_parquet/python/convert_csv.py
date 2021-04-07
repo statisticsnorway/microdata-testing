@@ -10,6 +10,7 @@ def days_since_epoch(date_string: str) -> int:
     date_obj = datetime.strptime(date_string, '%Y%m%d')
     return (date_obj - epoch).days
 
+print("Start ", datetime.now())
 
 with open(source_file, newline='') as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=';')
@@ -31,3 +32,5 @@ with open(source_file, newline='') as csvfile:
             row.append(days_since_epoch(stop_date))
 
             csv_writer.writerow(row)
+
+print("End ", datetime.now())
