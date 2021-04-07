@@ -10,4 +10,6 @@ with open(source_file, newline='') as csvfile:
         for row in csv_reader:
             row[2] = row[2].replace('-', '')
             row[3] = row[3].replace('-', '')
+            start_year = row[3][:4]
+            row.append(start_year)  # add start_year column to partition on it
             csv_writer.writerow(row)
