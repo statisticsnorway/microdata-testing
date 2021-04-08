@@ -23,40 +23,50 @@ print('Size of input file on disk: ' + str(os.path.getsize(data_dir + input_file
       + str(os.path.getsize(data_dir + input_file) / 1000000) + ' MB)')
 
 
-with timeblock('pyarrow run_test()'):
-    pyarrow_test.run_test(
-        input_file=data_dir + input_file,
-        output_dir=data_dir,
-        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)],
-        use_pandas=True
-    )
-
-with timeblock('fastparquet run_test()'):
-    start_as_datetime64 = np.datetime64('2005-02-25')
-    stop_as_datetime64 = np.datetime64('2015-02-25')
-    fastparquet_test.run_test(
-        input_file=data_dir + input_file,
-        output_dir=data_dir,
-        filters=[('start', '>=', start_as_datetime64), ('stop', '<=', stop_as_datetime64)]
-    )
+# with timeblock('pyarrow run_test()'):
+#     pyarrow_test.run_test(
+#         input_file=data_dir + input_file,
+#         output_dir=data_dir,
+#         filters=[('start', '>=', start_date), ('stop', '<=', stop_date)],
+#         use_pandas=True
+#     )
+#
+# with timeblock('fastparquet run_test()'):
+#     start_as_datetime64 = np.datetime64('2005-02-25')
+#     stop_as_datetime64 = np.datetime64('2015-02-25')
+#     fastparquet_test.run_test(
+#         input_file=data_dir + input_file,
+#         output_dir=data_dir,
+#         filters=[('start', '>=', start_as_datetime64), ('stop', '<=', stop_as_datetime64)]
+#     )
+#
+# with timeblock('pyarrow_test run_partition_test()'):
+#     pyarrow_test.run_partition_test(
+#         input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+#         output_dir=data_dir,
+#         filters=None
+#     )
+#
+# with timeblock('pyarrow run_id_filter_test()'):
+#     pyarrow_test.run_id_filter_test(
+#         input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+#         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
+#     )
+#
+# with timeblock('pyarrow run_id_filter_test_dataframe_join()'):
+#     pyarrow_test.run_id_filter_test_dataframe_join(
+#         input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
+#         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
+#     )
 
 with timeblock('pyarrow_test run_partition_test()'):
-    pyarrow_test.run_partition_test(
-        input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-        output_dir=data_dir,
-        filters=None
-    )
+    start_date = date.fromisoformat('2000-01-01')
+    stop_date = date.fromisoformat('2005-01-01')
 
-with timeblock('pyarrow run_id_filter_test()'):
-    pyarrow_test.run_id_filter_test(
-        input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-        input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
-    )
-
-with timeblock('pyarrow run_id_filter_test_dataframe_join()'):
-    pyarrow_test.run_id_filter_test_dataframe_join(
-        input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-        input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
+    pyarrow_test.run_partition_test2(
+        input_file_root_path=data_dir + 'accumulated_data_300_million_rows_small_converted',
+        output_dir=data_dir + 'resultsets/',
+        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)]
     )
 
 

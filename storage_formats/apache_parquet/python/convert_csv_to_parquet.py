@@ -4,7 +4,7 @@ import pyarrow.csv as pv
 import pyarrow.parquet as pq
 from datetime import datetime
 
-csv_filename = "accumulated_data_300_million_rows_converted.csv"
+csv_filename = "accumulated_data_300_million_rows_small_converted.csv"
 parquet_filename = '../data/' + csv_filename.replace('csv', 'parquet')
 parquet_partition_name = '../data/' + csv_filename.replace('.csv', '')
 
@@ -23,6 +23,8 @@ csv_parse_options = pv.ParseOptions(delimiter=';')
 data_schema = pa.schema([
     ('unit_id', pa.uint64()),
     ('value', pa.string()),
+    # ('start', pa.int64()),
+    # ('stop', pa.int64()),
     ('start', pa.uint32()),
     ('stop', pa.uint32()),
     ('start_year', pa.uint16()),
@@ -47,9 +49,16 @@ print(table.to_pandas().head(10))
 # write_table: https://arrow.apache.org/docs/python/generated/pyarrow.parquet.write_table.html#pyarrow.parquet.write_table
 # pq.write_table(table, parquet_filename)
 
+# Write a dataset and collect metadata information of all written files
+metadata_collector = []
+
 # write with partitions
 pq.write_to_dataset(table,
                     root_path=parquet_partition_name,
-                    partition_cols=['start_year'])
+                    partition_cols=['start_year'],
+                    metadata_collector=metadata_collector)
+
+# Write the ``_common_metadata`` parquet file without row groups statistics
+pq.write_metadata(table.schema, parquet_partition_name + '/_common_metadata')
 
 print("End ", datetime.now())

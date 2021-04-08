@@ -54,6 +54,9 @@ def run_test(input_file: str, output_dir: str, filters: list, use_pandas: bool):
 def run_partition_test(input_file: str, output_dir: str, filters: Optional[list] = None):
     milliseconds_since_epoch = int(time() * 1000)
 
+    print('Parquet metadata: ' + str(pq.read_metadata(input_file)))
+    print('Parquet schema: ' + pq.read_schema(input_file).to_string())
+
     data = pq.read_table(source=input_file, filters=filters)
 
     # Write a dataset and collect metadata information of all written files
