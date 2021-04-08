@@ -56,6 +56,6 @@ pq.write_to_dataset(table,
                     metadata_collector=metadata_collector)
 
 # Write the ``_common_metadata`` parquet file without row groups statistics
-pq.write_metadata(table.schema, parquet_partition_name + '/_common_metadata')
+# pq.write_metadata(table.schema, parquet_partition_name + '/_common_metadata')
 
 print("End ", datetime.now())

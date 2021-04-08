@@ -1,6 +1,7 @@
 import os
 from datetime import date
 
+import pyarrow.parquet as pq
 import numpy as np
 import fastparquet_test
 import pyarrow_test
@@ -14,13 +15,17 @@ search_path = ['.']  # set to None to see all modules importable from sys.path
 all_modules = [x[1] for x in pkgutil.iter_modules(path=search_path)]
 print(all_modules)
 
+
+def get_file_size_in_mb(file):
+    return round((os.path.getsize(file) / 1000000), 3)
+
+
 data_dir = '../data/'
 input_file = 'DATA_50_MILLION_ROWS__1_0.parquet'
 start_date = date.fromisoformat('2002-01-01')
 stop_date = date.fromisoformat('2006-01-01')
 
-print('Size of input file on disk: ' + str(os.path.getsize(data_dir + input_file)) + ' bytes ('
-      + str(os.path.getsize(data_dir + input_file) / 1000000) + ' MB)')
+print('Size of input file on disk: ' + str(get_file_size_in_mb(data_dir + input_file)) + ' MB')
 
 
 # with timeblock('pyarrow run_test()'):
@@ -60,14 +65,14 @@ print('Size of input file on disk: ' + str(os.path.getsize(data_dir + input_file
 #     )
 
 with timeblock('pyarrow_test run_partition_test()'):
-    start_date = date.fromisoformat('2000-01-01')
-    stop_date = date.fromisoformat('2005-01-01')
-
-    pyarrow_test.run_partition_test2(
+    output_file = pyarrow_test.run_partition_test2(
         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_small_converted',
         output_dir=data_dir + 'resultsets/',
-        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)]
+        filters=[('start_unix_days', '>=', 12000), ('stop_unix_days', '<=', 14000)]
     )
+print('Parquet metadata: ' + str(pq.read_metadata(output_file)))
+print('Parquet schema: ' + pq.read_schema(output_file).to_string())
+print('Size of output file on disk: ' + str(get_file_size_in_mb(output_file)) + ' MB')
 
 
 # TODO test nulls
