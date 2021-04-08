@@ -23,17 +23,14 @@ csv_parse_options = pv.ParseOptions(delimiter=';')
 data_schema = pa.schema([
     ('unit_id', pa.uint64()),
     ('value', pa.string()),
-    # ('start', pa.int64()),
-    # ('stop', pa.int64()),
-    ('start', pa.uint32()),
-    ('stop', pa.uint32()),
     ('start_year', pa.uint16()),
     ('start_unix_days', pa.uint16()),  # more than AD 2100
     ('stop_unix_days', pa.uint16()),
 ])
 
 # ConvertOptions: https://arrow.apache.org/docs/python/generated/pyarrow.csv.ConvertOptions.html#pyarrow.csv.ConvertOptions
-csv_convert_options = pv.ConvertOptions(column_types=data_schema)
+csv_convert_options = pv.ConvertOptions(column_types=data_schema,
+                                        include_columns=["unit_id", "value", "start_year", "start_unix_days", "stop_unix_days"])
 
 # read_csv: https://arrow.apache.org/docs/python/generated/pyarrow.csv.read_csv.html#pyarrow.csv.read_csv
 table = pv.read_csv(input_file=csv_filename, read_options=csv_read_options, parse_options=csv_parse_options,
