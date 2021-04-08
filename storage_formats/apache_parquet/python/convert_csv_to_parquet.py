@@ -2,10 +2,13 @@ import pandas
 import pyarrow as pa
 import pyarrow.csv as pv
 import pyarrow.parquet as pq
+from datetime import datetime
 
 csv_filename = "accumulated_data_300_million_rows_converted.csv"
 parquet_filename = '../data/' + csv_filename.replace('csv', 'parquet')
 parquet_partition_name = '../data/' + csv_filename.replace('.csv', '')
+
+print("Start ", datetime.now())
 
 # ReadOptions: https://arrow.apache.org/docs/python/generated/pyarrow.csv.ReadOptions.html#pyarrow.csv.ReadOptions
 csv_read_options = pv.ReadOptions(
@@ -48,3 +51,5 @@ print(table.to_pandas().head(10))
 pq.write_to_dataset(table,
                     root_path=parquet_partition_name,
                     partition_cols=['start_year'])
+
+print("End ", datetime.now())
