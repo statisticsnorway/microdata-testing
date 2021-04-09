@@ -78,19 +78,19 @@ data_dir = '../data/'
 # print_statistics(output_file)
 
 
-# with timeblock('pyarrow_test run_id_filter_test2()'):
-#     output_file = pyarrow_test.run_id_filter_test2(
-#         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
-#         input_id_file=data_dir + 'accumulated_data_300_million_rows_id_filter_1mill.parquet',
-#         output_dir=data_dir + 'resultsets/'
-#     )
-# print_statistics(output_file)
-
-
 with timeblock('pyarrow_test run_id_filter_test2()'):
-    output_file = pyarrow_test.run_id_filter_test_dataframe_join2(
+    output_file = pyarrow_test.run_id_filter_test2(
         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
         input_id_file=data_dir + 'accumulated_data_300_million_rows_id_filter_1mill.parquet',
         output_dir=data_dir + 'resultsets/'
     )
 print_statistics(output_file)
+
+
+# with timeblock('pyarrow_test run_id_filter_test2()'):
+#     output_file = pyarrow_test.run_id_filter_test_dataframe_join2(
+#         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
+#         input_id_file=data_dir + 'accumulated_data_300_million_rows_id_filter_1mill.parquet',
+#         output_dir=data_dir + 'resultsets/'
+#     )
+# print_statistics(output_file)
