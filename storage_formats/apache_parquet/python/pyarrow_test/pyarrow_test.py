@@ -6,7 +6,7 @@ from typing import Optional
 
 import pandas
 import pyarrow.parquet as pq
-from memory_profiler import profile
+# from memory_profiler import profile
 from pandas import DataFrame
 
 from timer import timeblock
@@ -59,6 +59,11 @@ def run_partition_test(input_file: str, output_dir: str, filters: Optional[list]
 
     data = pq.read_table(source=input_file, filters=filters)
 
+    print("--------------------")
+    print(data.schema)
+    print("--------------------")
+
+
     # Write a dataset and collect metadata information of all written files
     metadata_collector = []
     root_path = output_dir + 'partitioned_' + str(milliseconds_since_epoch)
@@ -87,7 +92,7 @@ def run_partition_test(input_file: str, output_dir: str, filters: Optional[list]
                           # filters=[('start_year', '>=', start_year)])
     print(table.to_pandas())
 
-@profile
+#@profile
 def run_id_filter_test(input_file: str, input_id_file: str):
 
     # converting ids to pandas will be a "zero copy conversion" as unit_id column is int64 when:
@@ -111,7 +116,7 @@ def run_id_filter_test(input_file: str, input_id_file: str):
     print(table.to_pandas())
 
 
-@profile
+#@profile
 def run_id_filter_test_dataframe_join(input_file: str, input_id_file: str):
 
     # https://pandas.pydata.org/docs/user_guide/merging.html#database-style-dataframe-or-named-series-joining-merging

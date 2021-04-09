@@ -1,11 +1,5 @@
-import os
-from datetime import date
-
-import numpy as np
-import fastparquet_test
 import pyarrow_test
 from timer import timeblock
-
 
 # Get a list of all importable modules from a given path
 # https://chrisyeh96.github.io/2017/08/08/definitive-guide-python-imports.html
@@ -14,61 +8,36 @@ search_path = ['.']  # set to None to see all modules importable from sys.path
 all_modules = [x[1] for x in pkgutil.iter_modules(path=search_path)]
 print(all_modules)
 
-data_dir = '../data/'
-input_file = 'DATA_50_MILLION_ROWS__1_0.parquet'
-start_date = date.fromisoformat('2002-01-01')
-stop_date = date.fromisoformat('2006-01-01')
 
-print('Size of input file on disk: ' + str(os.path.getsize(data_dir + input_file)) + ' bytes ('
-      + str(os.path.getsize(data_dir + input_file) / 1000000) + ' MB)')
-
-
-# with timeblock('pyarrow run_test()'):
-#     pyarrow_test.run_test(
-#         input_file=data_dir + input_file,
-#         output_dir=data_dir,
-#         filters=[('start', '>=', start_date), ('stop', '<=', stop_date)],
-#         use_pandas=True
-#     )
-#
-# with timeblock('fastparquet run_test()'):
-#     start_as_datetime64 = np.datetime64('2005-02-25')
-#     stop_as_datetime64 = np.datetime64('2015-02-25')
-#     fastparquet_test.run_test(
-#         input_file=data_dir + input_file,
-#         output_dir=data_dir,
-#         filters=[('start', '>=', start_as_datetime64), ('stop', '<=', stop_as_datetime64)]
-#     )
-#
-# with timeblock('pyarrow_test run_partition_test()'):
-#     pyarrow_test.run_partition_test(
-#         input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-#         output_dir=data_dir,
-#         filters=None
-#     )
-#
-# with timeblock('pyarrow run_id_filter_test()'):
-#     pyarrow_test.run_id_filter_test(
-#         input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-#         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
-#     )
-#
-# with timeblock('pyarrow run_id_filter_test_dataframe_join()'):
-#     pyarrow_test.run_id_filter_test_dataframe_join(
-#         input_file=data_dir + 'TEST_PERSON_INCOME_1_0_for_partitioning.parquet',
-#         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
-#     )
+root_dir = "/Users/vak/temp/data/"
 
 with timeblock('pyarrow_test run_partition_test()'):
-    start_date = date.fromisoformat('2000-01-01')
-    stop_date = date.fromisoformat('2005-01-01')
+
+# 2000-01-01
+# 10957
+# 2000-12-31
+# 11322
+
+
+# 2000-06-01
+# 11109
+# 2002-06-01
+# 11839
+
+
+    start_unix_days = 11109
+    stop_unix_days = 11839
+
+    print (start_unix_days)
+    print (stop_unix_days )
 
     pyarrow_test.run_partition_test2(
-        input_file_root_path=data_dir + 'accumulated_data_300_million_rows_small_converted',
-        output_dir=data_dir + 'resultsets/',
-        filters=[('start', '>=', start_date), ('stop', '<=', stop_date)]
+        # input_file_root_path=root_dir + 'accumulated_data_300_million_rader_converted',
+        # input_file_root_path=root_dir + 'y2000_only',
+        input_file_root_path=root_dir + 'y2000_2001_2002',
+        output_dir=root_dir + 'resultsets/',
+        filters=[('start_unix_days', '>=', start_unix_days), ('stop_unix_days', '<=', stop_unix_days)]
     )
-
 
 # TODO test nulls
 # fastparquet: https://fastparquet.readthedocs.io/en/latest/details.html#nulls
