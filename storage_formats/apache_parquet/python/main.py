@@ -20,15 +20,19 @@ def get_file_size_in_mb(file):
     return round((os.path.getsize(file) / 1000000), 3)
 
 
-data_dir = '../data/'
-input_file = 'DATA_50_MILLION_ROWS__1_0.parquet'
-start_date = date.fromisoformat('2002-01-01')
-stop_date = date.fromisoformat('2006-01-01')
+def print_statistics(file):
+    print('Parquet metadata: ' + str(pq.read_metadata(file)))
+    print('Parquet schema: ' + pq.read_schema(file).to_string())
+    print('Size of output file on disk: ' + str(get_file_size_in_mb(file)) + ' MB')
 
-print('Size of input file on disk: ' + str(get_file_size_in_mb(data_dir + input_file)) + ' MB')
+
+data_dir = '../data/'
 
 
 # with timeblock('pyarrow run_test()'):
+#     start_date = date.fromisoformat('2002-01-01')
+#     stop_date = date.fromisoformat('2006-01-01')
+#     input_file = 'DATA_50_MILLION_ROWS__1_0.parquet'
 #     pyarrow_test.run_test(
 #         input_file=data_dir + input_file,
 #         output_dir=data_dir,
@@ -39,6 +43,7 @@ print('Size of input file on disk: ' + str(get_file_size_in_mb(data_dir + input_
 # with timeblock('fastparquet run_test()'):
 #     start_as_datetime64 = np.datetime64('2005-02-25')
 #     stop_as_datetime64 = np.datetime64('2015-02-25')
+#     input_file = 'DATA_50_MILLION_ROWS__1_0.parquet'
 #     fastparquet_test.run_test(
 #         input_file=data_dir + input_file,
 #         output_dir=data_dir,
@@ -64,16 +69,19 @@ print('Size of input file on disk: ' + str(get_file_size_in_mb(data_dir + input_
 #         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
 #     )
 
-with timeblock('pyarrow_test run_partition_test()'):
-    output_file = pyarrow_test.run_partition_test2(
-        input_file_root_path=data_dir + 'accumulated_data_300_million_rows_small_converted',
-        output_dir=data_dir + 'resultsets/',
-        filters=[('start_unix_days', '>=', 12000), ('stop_unix_days', '<=', 14000)]
+# with timeblock('pyarrow_test run_partition_test()'):
+#     output_file = pyarrow_test.run_partition_test2(
+#         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
+#         output_dir=data_dir + 'resultsets/',
+#         filters=[('start_unix_days', '>=', 12000), ('stop_unix_days', '<=', 14000)]
+#     )
+# print_statistics(output_file)
+
+
+with timeblock('pyarrow_test run_id_filter_test2()'):
+    output_file = pyarrow_test.run_id_filter_test2(
+        input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
+        input_id_file=data_dir + 'accumulated_data_300_million_rows_id_filter_1mill.parquet',
+        output_dir=data_dir + 'resultsets/'
     )
-print('Parquet metadata: ' + str(pq.read_metadata(output_file)))
-print('Parquet schema: ' + pq.read_schema(output_file).to_string())
-print('Size of output file on disk: ' + str(get_file_size_in_mb(output_file)) + ' MB')
-
-
-# TODO test nulls
-# fastparquet: https://fastparquet.readthedocs.io/en/latest/details.html#nulls
+print_statistics(output_file)

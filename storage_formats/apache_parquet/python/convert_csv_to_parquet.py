@@ -4,7 +4,7 @@ import pyarrow.csv as pv
 import pyarrow.parquet as pq
 from datetime import datetime
 
-csv_filename = "accumulated_data_300_million_rows_small_converted.csv"
+csv_filename = "accumulated_data_300_million_rows_converted.csv"
 parquet_filename = '../data/' + csv_filename.replace('csv', 'parquet')
 parquet_partition_name = '../data/' + csv_filename.replace('.csv', '')
 

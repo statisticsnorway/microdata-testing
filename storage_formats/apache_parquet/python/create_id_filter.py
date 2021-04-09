@@ -3,9 +3,9 @@ from datetime import datetime
 
 # Lager en fil med id'er som kan brukes til id filtrering
 
-filter_size = 50
-source_file = 'accumulated_data_100_rader.txt'
-target_file = 'accumulated_data_100_rader_id_filter.txt'
+filter_size = 1000000
+source_file = 'accumulated_data_300_million_rows.csv'
+target_file = 'accumulated_data_300_million_rows_id_filter.csv'
 
 print("Start ", datetime.now())
 
