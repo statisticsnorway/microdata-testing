@@ -24,8 +24,8 @@ data_schema = pa.schema([
     ('unit_id', pa.uint64()),
     ('value', pa.string()),
     ('start_year', pa.uint16()),
-    ('start_unix_days', pa.uint16()),  # more than AD 2100
-    ('stop_unix_days', pa.uint16()),
+    ('start_unix_days', pa.int16()),
+    ('stop_unix_days', pa.int16()),
 ])
 
 # ConvertOptions: https://arrow.apache.org/docs/python/generated/pyarrow.csv.ConvertOptions.html#pyarrow.csv.ConvertOptions
