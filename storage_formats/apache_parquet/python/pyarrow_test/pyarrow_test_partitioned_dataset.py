@@ -7,8 +7,12 @@ from memory_profiler import profile
 from timer import timeblock
 
 
-@profile()
+#@profile()
 def run_partition_test2(input_file_root_path: str, output_dir: str, filters: Optional[list] = None):
+
+    table = pq.read_table(source=input_file_root_path, use_threads=False)
+    col = table.column('stop_unix_days')
+    print(col.null_count)
 
     with timeblock('Read and filter'):
         table = pq.read_table(source=input_file_root_path, filters=filters, use_threads=False)

@@ -1,5 +1,6 @@
 import pyarrow_test
 from timer import timeblock
+from numpy import nan
 
 # Get a list of all importable modules from a given path
 # https://chrisyeh96.github.io/2017/08/08/definitive-guide-python-imports.html
@@ -34,9 +35,10 @@ with timeblock('pyarrow_test run_partition_test()'):
     pyarrow_test.run_partition_test2(
         # input_file_root_path=root_dir + 'accumulated_data_300_million_rader_converted',
         # input_file_root_path=root_dir + 'y2000_only',
-        input_file_root_path=root_dir + 'y2000_2001_2002',
+        input_file_root_path=root_dir + 'data_50_missing_converted',
         output_dir=root_dir + 'resultsets/',
-        filters=[('start_unix_days', '>=', start_unix_days), ('stop_unix_days', '<=', stop_unix_days)]
+        filters=[('start_unix_days', '=', 730), ('stop_unix_days', '==', None)]
+#       filters=[('start_unix_days', '>=', start_unix_days), ('stop_unix_days', '<=', stop_unix_days)]
     )
 
 # TODO test nulls

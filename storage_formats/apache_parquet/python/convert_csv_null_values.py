@@ -1,8 +1,8 @@
 import csv
 from datetime import datetime
 
-source_file = '/Users/vak/temp/data_50_missing.csv'
-target_file = '/Users/vak/temp/data_50_missing_converted.csv'
+source_file = 'data_50_missing.csv'
+target_file = 'data_50_missing_converted.csv'
 
 
 def days_since_epoch(date_string: str) -> int:
@@ -29,11 +29,7 @@ with open(source_file, newline='') as csvfile:
             row.append(start_year)  # add start_year column to partition on it
 
             row.append(days_since_epoch(start_date))
-
-            if stop_date:
-                row.append(days_since_epoch(stop_date))
-            else:
-                row.append('')
+            row.append(days_since_epoch(stop_date))
 
             csv_writer.writerow(row)
 
