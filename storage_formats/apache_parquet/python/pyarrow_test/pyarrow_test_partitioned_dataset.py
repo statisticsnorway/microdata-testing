@@ -12,7 +12,7 @@ from timer import timeblock
 @profile()
 def run_partition_test2(input_file_root_path: str, output_dir: str, filters: Optional[list] = None) -> str:
 
-    table = pq.read_table(source=input_file_root_path, filters=filters, use_threads=False)
+    table = pq.read_table(source=input_file_root_path, filters=filters, use_threads=True)
 
     milliseconds_since_epoch = int(time() * 1000)
     output_file = output_dir + str(milliseconds_since_epoch) + 'run_partition_test2_result_set.parquet'
@@ -36,7 +36,7 @@ def run_id_filter_test2(input_file_root_path: str, input_id_file: str, output_di
     print('Number of ids in filter: ' + str(len(filter_ids)))
 
     with timeblock('read_table() and filter'):
-        table = pq.read_table(source=input_file_root_path, use_threads=False, filters=[
+        table = pq.read_table(source=input_file_root_path, use_threads=True, filters=[
             ('unit_id', 'in', filter_ids)
         ])
 
