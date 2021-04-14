@@ -3,10 +3,13 @@ from datetime import date
 
 import pyarrow.parquet as pq
 import numpy as np
+from pyarrow._dataset import Expression
+
 import fastparquet_test
 import pyarrow_test
 from timer import timeblock
-
+import pyarrow as pa
+import pyarrow.dataset
 
 # Get a list of all importable modules from a given path
 # https://chrisyeh96.github.io/2017/08/08/definitive-guide-python-imports.html
@@ -24,7 +27,8 @@ def print_statistics(file):
     print('Parquet metadata: ' + str(pq.read_metadata(file)))
     print('Parquet schema: ' + pq.read_schema(file).to_string())
     print('Size of output file on disk: ' + str(get_file_size_in_mb(file)) + ' MB')
-
+    print('Data:')
+    print(pq.read_table(file).to_pandas().head())
 
 data_dir = '../data/'
 
@@ -69,22 +73,36 @@ data_dir = '../data/'
 #         input_id_file=data_dir + 'TEST_PERSON_INCOME_1_0_unit_ids.parquet'
 #     )
 
-# with timeblock('pyarrow_test run_partition_test()'):
-#     output_file = pyarrow_test.run_partition_test2(
-#         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
-#         output_dir=data_dir + 'resultsets/',
-#         filters=[('start_unix_days', '>=', 12000), ('stop_unix_days', '<=', 14000)]
-#     )
-# print_statistics(output_file)
+ex: Expression = pyarrow.dataset.field("start_unix_days").isin([730])
+ex2: Expression = ~pyarrow.dataset.field("stop_unix_days").is_valid()
 
+with timeblock('pyarrow_test run_partition_test()'):
+    output_file = pyarrow_test.run_partition_test2(
+        input_file_root_path=data_dir + 'accumulated_data_300_million_rows_small_converted',
+        output_dir=data_dir + 'resultsets/',
 
-with timeblock('pyarrow_test run_id_filter_test2()'):
-    output_file = pyarrow_test.run_id_filter_test2(
-        input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
-        input_id_file=data_dir + 'accumulated_data_300_million_rows_id_filter_1mill.parquet',
-        output_dir=data_dir + 'resultsets/'
+        # filters=~pyarrow.dataset.field("stop_unix_days").is_valid()
+
+        # filters=pyarrow.dataset.field("start_unix_days").isin([730])
+
+        # filters=pyarrow.dataset.field("start_unix_days").isin([730, 17167])
+
+        # filters=ex.__or__(ex2)
+
+        #filters=ex.__and__(ex2)
+
+        filters=ex | ex2
     )
 print_statistics(output_file)
+
+
+# with timeblock('pyarrow_test run_id_filter_test2()'):
+#     output_file = pyarrow_test.run_id_filter_test2(
+#         input_file_root_path=data_dir + 'accumulated_data_300_million_rows_converted',
+#         input_id_file=data_dir + 'accumulated_data_300_million_rows_id_filter_1mill.parquet',
+#         output_dir=data_dir + 'resultsets/'
+#     )
+# print_statistics(output_file)
 
 
 # with timeblock('pyarrow_test run_id_filter_test2()'):

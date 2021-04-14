@@ -4,7 +4,7 @@ import pyarrow.csv as pv
 import pyarrow.parquet as pq
 from datetime import datetime
 
-csv_filename = "accumulated_data_300_million_rows_converted.csv"
+csv_filename = "accumulated_data_300_million_rows_small_converted.csv"
 parquet_filename = '../data/' + csv_filename.replace('csv', 'parquet')
 parquet_partition_name = '../data/' + csv_filename.replace('.csv', '')
 
@@ -20,12 +20,20 @@ csv_read_options = pv.ReadOptions(
 csv_parse_options = pv.ParseOptions(delimiter=';')
 
 # Types: https://arrow.apache.org/docs/python/api/datatypes.html
+# data_schema = pa.schema([
+#     ('unit_id', pa.uint64()),
+#     ('value', pa.string()),
+#     ('start_year', pa.uint16()),
+#     ('start_unix_days', pa.int16()),
+#     ('stop_unix_days', pa.int16()),
+# ])
+
 data_schema = pa.schema([
-    ('unit_id', pa.uint64()),
-    ('value', pa.string()),
-    ('start_year', pa.uint16()),
-    ('start_unix_days', pa.int16()),
-    ('stop_unix_days', pa.int16()),
+    pa.field(name='start_year', type=pa.string(), nullable=True),
+    pa.field(name='unit_id', type=pa.uint64(), nullable=False),
+    pa.field(name='value', type=pa.string(), nullable=False),
+    pa.field(name='start_epoch_days', type=pa.int16(), nullable=True),
+    pa.field(name='stop_epoch_days', type=pa.int16(), nullable=True),
 ])
 
 # ConvertOptions: https://arrow.apache.org/docs/python/generated/pyarrow.csv.ConvertOptions.html#pyarrow.csv.ConvertOptions

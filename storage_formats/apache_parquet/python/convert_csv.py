@@ -28,8 +28,15 @@ with open(source_file, newline='') as csvfile:
             start_year = start_date[:4]
             row.append(start_year)  # add start_year column to partition on it
 
-            row.append(days_since_epoch(start_date))
-            row.append(days_since_epoch(stop_date))
+            if (start_date):
+                row.append(days_since_epoch(start_date))
+            else:
+                row.append('')
+
+            if (stop_date):
+                row.append(days_since_epoch(stop_date))
+            else:
+                row.append('')
 
             csv_writer.writerow(row)
 
