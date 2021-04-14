@@ -1,19 +1,15 @@
 import os
-from datetime import date
-
-import pyarrow.parquet as pq
-import numpy as np
-from pyarrow._dataset import Expression
-
-import fastparquet_test
-import pyarrow_test
-from timer import timeblock
-import pyarrow as pa
-import pyarrow.dataset
-
 # Get a list of all importable modules from a given path
 # https://chrisyeh96.github.io/2017/08/08/definitive-guide-python-imports.html
 import pkgutil
+
+import pyarrow.dataset
+import pyarrow.parquet as pq
+from pyarrow._dataset import Expression
+
+import pyarrow_test
+from timer import timeblock
+
 search_path = ['.']  # set to None to see all modules importable from sys.path
 all_modules = [x[1] for x in pkgutil.iter_modules(path=search_path)]
 print(all_modules)
@@ -27,8 +23,6 @@ def print_statistics(file):
     print('Parquet metadata: ' + str(pq.read_metadata(file)))
     print('Parquet schema: ' + pq.read_schema(file).to_string())
     print('Size of output file on disk: ' + str(get_file_size_in_mb(file)) + ' MB')
-    print('Data:')
-    print(pq.read_table(file).to_pandas().head())
 
 data_dir = '../data/'
 
@@ -87,11 +81,9 @@ with timeblock('pyarrow_test run_partition_test()'):
 
         # filters=pyarrow.dataset.field("start_unix_days").isin([730, 17167])
 
-        # filters=ex.__or__(ex2)
+        # filters=ex & ex2
 
-        #filters=ex.__and__(ex2)
-
-        filters=ex | ex2
+        filters=ex and ex2
     )
 print_statistics(output_file)
 
