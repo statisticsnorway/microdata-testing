@@ -4,6 +4,7 @@ import pandas
 
 import pyarrow.parquet as pq
 from memory_profiler import profile
+from pyarrow.lib import ChunkedArray
 from timer import timeblock
 
 
@@ -14,8 +15,12 @@ def run_partition_test2(input_file_root_path: str, output_dir: str, filters: Opt
     col = table.column('stop_unix_days')
     print(col.null_count)
 
+    charray: ChunkedArray = table.column('stop_unix_days')
+    print(charray)
+
     with timeblock('Read and filter'):
         table = pq.read_table(source=input_file_root_path, filters=filters, use_threads=False)
+        #table = pq.read_table(source=input_file_root_path, use_threads=False)
 
     milliseconds_since_epoch = int(time() * 1000)
     output_file = output_dir + str(milliseconds_since_epoch) + 'run_partition_test2_result_set.parquet'

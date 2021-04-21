@@ -8,7 +8,7 @@ from timer import timeblock
 
 
 root_dir = "/Users/vak/temp/"
-file_name = "data_50_missing_converted.csv"
+file_name = "accumulated_data_1_million_rader_converted_int32.csv"
 
 csv_filename = root_dir + file_name
 parquet_filename = root_dir + 'data/' + file_name.replace('csv', 'parquet')
@@ -47,15 +47,16 @@ data_schema = pa.schema([
     ('unit_id', pa.uint64()),
     ('value', pa.string()),
     ('start_year', pa.uint16()),
-    ('start_unix_days', pa.uint16()),  # more than AD 2100
-    ('stop_unix_days', pa.uint16()),
+    ('start_unix_days', pa.int32()),  # more than AD 2100
+    ('stop_unix_days', pa.int32()),
 ])
 
 # ConvertOptions: https://arrow.apache.org/docs/python/generated/pyarrow.csv.ConvertOptions.html#pyarrow.csv.ConvertOptions
 csv_convert_options = pv.ConvertOptions(
                             column_types=data_schema,
                             include_columns=["unit_id", "value", "start_year", "start_unix_days", "stop_unix_days"],
-                            strings_can_be_null=False)
+                            null_values=["NULL"],
+                            strings_can_be_null=True)
 
 # read_csv: https://arrow.apache.org/docs/python/generated/pyarrow.csv.read_csv.html#pyarrow.csv.read_csv
 table = pv.read_csv(input_file=csv_filename, read_options=csv_read_options, parse_options=csv_parse_options,

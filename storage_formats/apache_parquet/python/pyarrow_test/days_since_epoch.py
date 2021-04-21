@@ -12,3 +12,5 @@ print(to_days_since_epoch("2000-12-31"))
 
 print(to_days_since_epoch("2000-06-01"))
 print(to_days_since_epoch("2002-06-01"))
+
+print(to_days_since_epoch("1900-01-01"))

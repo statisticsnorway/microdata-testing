@@ -1,8 +1,8 @@
 import csv
 from datetime import datetime
 
-source_file = '/Users/vak/temp/data_50_missing.csv'
-target_file = '/Users/vak/temp/data_50_missing_converted.csv'
+source_file = '/Users/vak/temp/accumulated_data_1_million_rader.csv'
+target_file = '/Users/vak/temp/accumulated_data_1_million_rader_converted.csv'
 
 
 def days_since_epoch(date_string: str) -> int:
@@ -11,6 +11,8 @@ def days_since_epoch(date_string: str) -> int:
     return (date_obj - epoch).days
 
 print("Start ", datetime.now())
+
+missing_hack = -32768
 
 with open(source_file, newline='') as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=';')
@@ -34,6 +36,7 @@ with open(source_file, newline='') as csvfile:
                 row.append(days_since_epoch(stop_date))
             else:
                 row.append('')
+                #row.append(missing_hack)
 
             csv_writer.writerow(row)
 
