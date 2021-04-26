@@ -81,9 +81,10 @@ with timeblock('pyarrow_test run_partition_test()'):
 
         # filters=pyarrow.dataset.field("start_unix_days").isin([730, 17167])
 
-        # filters=ex & ex2
+        filters=ex & ex2
 
-        filters=ex and ex2
+        #Don't use this! It will not work as expected
+        #filters=ex and ex2
     )
 print_statistics(output_file)
 
